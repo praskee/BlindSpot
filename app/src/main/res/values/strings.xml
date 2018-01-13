@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BlindSpot</string>
+    <string name="welcome_message">Tap on mic to speak</string>
 </resources>
