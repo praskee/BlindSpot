@@ -27,6 +27,8 @@ import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
 import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import static android.speech.SpeechRecognizer.createSpeechRecognizer;
@@ -167,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             //txtSpeech.setText("results: "+String.valueOf(data.size()));
             txtSpeech.setText(String.valueOf(data.get(0)));
             readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + "?"));
+            languageProcessing(String.valueOf(data.get(0)));
 
         }
         public void onPartialResults(Bundle partialResults)
@@ -183,4 +186,26 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    private void languageProcessing(String input){
+        List<String> result = Arrays.asList(input.split(" "));
+        for(int i = 0; i < result.size()-1; i++) {
+            if(result.get(i).equals(new String("sala")) || result.get(i).equals(new String("sali"))) {
+                try {
+                    Integer.parseInt(result.get(i + 1));
+                    Log.d("Room:", result.get(i + 1).toString());
+                    //TODO: Navigate to room NUMBER
+                    break;
+                } catch (NumberFormatException ex) {
+                    continue;
+                    //TODO: String is not a number
+                }
+            }
+            // Looking for a lift
+            if(result.get(i).equals(new String("winda")) || result.get(i).equals(new String("windy"))){
+                //TODO: Navigate to lift
+                Log.d("Lift:", result.get(i).toString());
+                break;
+            }
+        }
+    }
 }
