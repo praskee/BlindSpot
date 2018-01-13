@@ -50,14 +50,25 @@
             app:indicatorColor="@color/colorAccent"/>
         <ImageButton
             android:id="@+id/btnSpeak"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimary"
             android:contentDescription="@string/mic_description"
-            android:src="@drawable/ic_mic_mint_24dp" />
+            android:src="@drawable/ic_mic_mint_24dp"
+            android:visibility="visible"/>
+
+        <ImageButton
+            android:id="@+id/btnConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_close_check"
+            android:visibility="gone"
+            android:scaleType="fitCenter"/>
         </RelativeLayout>
 
     </LinearLayout>

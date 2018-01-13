@@ -1,9 +1,9 @@
 package com.winthishackathon.xd.blindspot;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.RecognitionListener;
@@ -20,7 +20,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import com.indoorway.android.common.sdk.IndoorwaySdk;
+import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -53,8 +55,24 @@ public class MainActivity extends AppCompatActivity {
         //kiedy nie ma bluetootha
         if (mBluetoothAdapter == null) {
             // Device doesn't support Bluetooth
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+            builder1.setMessage("You need a bluetooth module to run this application");
+            builder1.setCancelable(true);
+
+
+            builder1.setNeutralButton(
+                    "Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
             //TODO: dialog pop up ze apka nie dziala bez blufiuta
-        } else
+         else
         //jesli bluetooth jest wylaczony requestuj permissiony w runtimie
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -78,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //TODO: podmianka buttona + handling yes/no to new activity
+        //TODO: mock buttonu
+
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -87,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     // Requesting permission to RECORD_AUDIO
@@ -112,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d("Action", "DOWN" );
-
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
