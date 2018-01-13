@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.indoorway.android.common.sdk.IndoorwaySdk;
 import com.wang.avi.AVLoadingIndicatorView;
-import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

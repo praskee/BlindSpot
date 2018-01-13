@@ -1,19 +1,14 @@
-package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
+package com.winthishackathon.xd.blindspot.IndoorWayMapPackage;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,10 +18,7 @@ import com.indoorway.android.common.sdk.model.Coordinates;
 import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
 import com.indoorway.android.fragments.sdk.map.MapFragment;
 import com.indoorway.android.map.sdk.view.MapView;
-import com.winthishackathon.xd.blindspot.MainActivity;
 import com.winthishackathon.xd.blindspot.R;
-
-import java.util.Collection;
 
 /**
  * Created by Tomasz on 13/01/2018.
