@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.indoorway.android.common.sdk.IndoorwaySdk;
+import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
+import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -31,13 +33,23 @@ public class MainActivity extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 10;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(
+      savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         txtSpeech = (TextView) findViewById(R.id.txtSpeechInput);
         btnSpeech = (ImageButton) findViewById(R.id.btnSpeak);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new MainActivity.listener());
+
+        ImageButton button = (ImageButton)findViewById(R.id.btnSpeak);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+             intent = new Intent(MainActivity.this, IndoorwayMapActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // init application context on each Application start
         IndoorwaySdk.initContext(this);

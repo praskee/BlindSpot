@@ -3,6 +3,7 @@
     package="com.winthishackathon.xd.blindspot">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -17,6 +18,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".indoorwayMapPackage.IndoorwayMapActivity">
         </activity>
     </application>
 
