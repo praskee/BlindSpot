@@ -1,6 +1,7 @@
 package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +9,14 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.indoorway.android.common.sdk.listeners.generic.Action1;
 import com.indoorway.android.common.sdk.model.Coordinates;
@@ -76,6 +81,15 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     // Vibrate for 500 milliseconds
                     v.vibrate(300);
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(IndoorwayMapActivity.this);
+                    View mView = getLayoutInflater().inflate(R.layout.dialog_exit_nav,null);
+                    mBuilder.setView(mView);
+                    AlertDialog dialog = mBuilder.create();
+
+                    Window window = dialog.getWindow();
+                    WindowManager.LayoutParams wlp = window.getAttributes();
+                    wlp.gravity = Gravity.BOTTOM;
+                    dialog.show();
                 }
             }
         });
