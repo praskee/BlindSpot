@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -34,6 +35,19 @@
         android:orientation="vertical"
         android:weightSum="100">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60"
+            >
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/speechLoader"
+            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:visibility="invisible"
+            app:indicatorName="LineScaleIndicator"
+            app:indicatorColor="@color/colorAccent"/>
         <ImageButton
             android:id="@+id/btnSpeak"
             android:layout_width="match_parent"
@@ -55,6 +69,8 @@
             android:src="@drawable/ic_close_check"
             android:visibility="gone"
             android:scaleType="fitCenter"/>
+        </RelativeLayout>
+
     </LinearLayout>
 
 </LinearLayout>

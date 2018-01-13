@@ -37,21 +37,21 @@
             android:layout_marginBottom="80dp"
             android:weightSum="100">
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:background="@color/colorPrimary"
-                app:srcCompat="@drawable/ic_confirm" />
+            <!--<ImageButton-->
+                <!--android:id="@+id/imageButton"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="50"-->
+                <!--android:background="@color/colorPrimary"-->
+                <!--app:srcCompat="@drawable/ic_confirm" />-->
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:background="@color/colorPrimary"
-                app:srcCompat="@drawable/ic_reject" />
+            <!--<ImageButton-->
+                <!--android:id="@+id/imageButton2"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="50"-->
+                <!--android:background="@color/colorPrimary"-->
+                <!--app:srcCompat="@drawable/ic_reject" />-->
 
         </LinearLayout>
     </LinearLayout>
