@@ -15,12 +15,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:layout_weight="40"
+        android:contentDescription="@string/tv_speak_description"
         android:text="@string/welcome_message"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/colorAccent"
         android:textSize="32sp"
-        android:textStyle="normal"
-        android:contentDescription="@string/tv_speak_description"/>
+        android:textStyle="normal" />
 
     <LinearLayout
         android:id="@+id/ll_mic_prostokat"
@@ -38,12 +38,11 @@
             android:id="@+id/btnSpeak"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@null"
-            android:src="@drawable/ic_mic_black_122dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimary"
             android:contentDescription="@string/mic_description"
-            />
+            android:src="@drawable/ic_mic_mint_24dp" />
     </LinearLayout>
 
 </LinearLayout>
