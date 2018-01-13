@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 10;
 
     @Override
-    protected void onCreate(
-      savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         txtSpeech = (TextView) findViewById(R.id.txtSpeechInput);
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             intent = new Intent(MainActivity.this, IndoorwayMapActivity.class);
+             Intent intent = new Intent(MainActivity.this, IndoorwayMapActivity.class);
                 startActivity(intent);
             }
         });
