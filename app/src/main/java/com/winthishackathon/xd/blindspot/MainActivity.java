@@ -12,19 +12,16 @@ import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.indoorway.android.common.sdk.IndoorwaySdk;
-import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
-import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -35,28 +32,29 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_ENABLE_BT = 1;
     static final int MY_PERMISSIONS_REQUEST_MICROPHONE = 2;
-
+    private static final String TAG = "MainActivity";
     private TextView txtSpeech;
     private ImageButton btnSpeech;
     private SpeechRecognizer sr;
     private TextToSpeech textToSpeech;
     private final int REQ_CODE_SPEECH_INPUT = 10;
-
+    private AVLoadingIndicatorView loadingButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         txtSpeech = (TextView) findViewById(R.id.txtSpeechInput);
         btnSpeech = (ImageButton) findViewById(R.id.btnSpeak);
+        loadingButton = (AVLoadingIndicatorView) findViewById(R.id.speechLoader);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new MainActivity.listener());
-
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         //kiedy nie ma bluetootha
         if (mBluetoothAdapter == null) {
             // Device doesn't support Bluetooth
             //TODO: dialog pop up ze apka nie dziala bez blufiuta
-        }
+        } else
         //jesli bluetooth jest wylaczony requestuj permissiony w runtimie
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -75,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         btnSpeech.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                showLoadingButton();
                 return speechRecognize(view, motionEvent);
             }
         });
@@ -122,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 Log.d("Action", "UP" );
                 sr.stopListening();
+                showMicrophoneButton();
                 return true;
         }
         return false;
@@ -183,4 +183,13 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    private void showLoadingButton() {
+        loadingButton.setVisibility(View.VISIBLE);
+        btnSpeech.setVisibility(View.INVISIBLE);
+    }
+
+    private void showMicrophoneButton(){
+        loadingButton.setVisibility(View.INVISIBLE);
+        btnSpeech.setVisibility(View.VISIBLE);
+    }
 }
