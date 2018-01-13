@@ -21,7 +21,7 @@
         android:textColor="@color/colorAccent"
         android:textSize="32sp"
         android:textStyle="normal" />
-
+  
     <LinearLayout
         android:id="@+id/ll_mic_prostokat"
         android:layout_width="match_parent"
