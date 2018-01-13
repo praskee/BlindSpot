@@ -27,6 +27,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import static android.speech.SpeechRecognizer.createSpeechRecognizer;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
     private final int REQ_CODE_SPEECH_INPUT = 10;
     private AVLoadingIndicatorView loadingButton;
+    private boolean yesFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,12 +189,18 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "result " + data.get(i));
                 str += data.get(i);
             }
-            if(String.valueOf(data.get(0)).equals("tak"))
+            if(String.valueOf(data.get(0)).equals("tak") && yesFlag)
             {
                 Log.d("STTRES","Zmien aktiwiti");
+                Intent intent = new Intent(MainActivity.this,IndoorwayMapActivity.class);
+                startActivity(intent);
+                readString("Przechodze do nawigacji");
             }
-            txtSpeech.setText(String.valueOf(data.get(0)));
-            readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + getResources().getString(R.string.pause)));
+            else {
+                txtSpeech.setText(String.valueOf(data.get(0)));
+                readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + getResources().getString(R.string.pause)));
+                languageProcessing(String.valueOf(data.get(0)));
+            }
 
         }
         public void onPartialResults(Bundle partialResults)
@@ -206,6 +215,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void readString(String toSpeak) {
         textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    private void languageProcessing(String input) {
+        List<String> result = Arrays.asList(input.split(" "));
+        for (int i = 0; i < result.size(); i++) {
+            // Looking for a lift
+            if(result.size() == 1 && result.get(i).equals(new String("winda")) || result.get(i).equals(new String("windy"))) {
+                Log.d("Lift:", result.get(i).toString());
+                break;
+            } else if (result.get(i).equals(new String("sala")) || result.get(i).equals(new String("sali"))) {
+                try {
+                    Integer.parseInt(result.get(i + 1));
+                    Log.d("Room:", result.get(i + 1).toString());
+                    //TODO: Navigate to room NUMBER
+                    yesFlag = true;
+                        break;
+                } catch (NumberFormatException ex) {
+                    Log.d("Exception:", ex.toString());
+                    //TODO: String is not a number
+                } catch (IndexOutOfBoundsException iex){
+                    Log.d("Exception:", iex.toString());
+                }
+            }
+        }
     }
 
     private void showLoadingButton() {
