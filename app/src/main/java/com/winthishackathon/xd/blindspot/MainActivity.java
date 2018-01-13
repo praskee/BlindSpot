@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -19,11 +18,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.indoorway.android.common.sdk.IndoorwaySdk;
 import com.wang.avi.AVLoadingIndicatorView;
+import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
