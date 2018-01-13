@@ -23,6 +23,7 @@ import com.indoorway.android.common.sdk.model.Coordinates;
 import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
 import com.indoorway.android.fragments.sdk.map.MapFragment;
 import com.indoorway.android.map.sdk.view.MapView;
+import com.winthishackathon.xd.blindspot.MainActivity;
 import com.winthishackathon.xd.blindspot.R;
 
 import java.util.Collection;
@@ -34,6 +35,7 @@ import java.util.Collection;
 public class IndoorwayMapActivity extends AppCompatActivity implements IndoorwayMapFragment.OnMapFragmentReadyListener {
 
     int tapCounter = 0;
+    int resultTapCounter = 0;
     Handler h = new Handler();
     int delay = 1000; //1 seconds
     Runnable runnable;
@@ -58,7 +60,8 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
         h.postDelayed(new Runnable() {
             public void run() {
                 tapCounter = 0;
-                Log.i("Timer","Counter got cleared");
+                resultTapCounter = 0;
+                Log.i("Timer","Counters got cleared");
                 runnable=this;
 
                 h.postDelayed(runnable, delay);
@@ -84,7 +87,7 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                     AlertDialog.Builder mBuilder = new AlertDialog.Builder(IndoorwayMapActivity.this);
                     View mView = getLayoutInflater().inflate(R.layout.dialog_exit_nav,null);
                     mBuilder.setView(mView);
-                    AlertDialog dialog = mBuilder.create();
+                    final AlertDialog dialog = mBuilder.create();
 
                     Window window = dialog.getWindow();
                     WindowManager.LayoutParams wlp = window.getAttributes();

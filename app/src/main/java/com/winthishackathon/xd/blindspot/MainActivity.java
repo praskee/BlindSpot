@@ -1,11 +1,16 @@
 package com.winthishackathon.xd.blindspot;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +33,9 @@ import static android.speech.SpeechRecognizer.createSpeechRecognizer;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int REQUEST_ENABLE_BT = 1;
+    static final int MY_PERMISSIONS_REQUEST_MICROPHONE = 2;
+
     private TextView txtSpeech;
     private ImageButton btnSpeech;
     private SpeechRecognizer sr;
@@ -43,14 +51,19 @@ public class MainActivity extends AppCompatActivity {
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new MainActivity.listener());
 
-        ImageButton button = (ImageButton)findViewById(R.id.btnSpeak);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-             Intent intent = new Intent(MainActivity.this, IndoorwayMapActivity.class);
-                startActivity(intent);
-            }
-        });
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        //kiedy nie ma bluetootha
+        if (mBluetoothAdapter == null) {
+            // Device doesn't support Bluetooth
+            //TODO: dialog pop up ze apka nie dziala bez blufiuta
+        }
+        //jesli bluetooth jest wylaczony requestuj permissiony w runtimie
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+
+        ActivityCompat.requestPermissions(this, permissions, MY_PERMISSIONS_REQUEST_MICROPHONE);
 
         // init application context on each Application start
         IndoorwaySdk.initContext(this);
@@ -76,6 +89,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+    // Requesting permission to RECORD_AUDIO
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions2, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case MY_PERMISSIONS_REQUEST_MICROPHONE:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) finish();
+
+    }
 
     public boolean speechRecognize(View v, MotionEvent event) {
         SpeechRecognizer speechRecognizer = createSpeechRecognizer(MainActivity.this);
