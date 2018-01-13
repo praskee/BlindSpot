@@ -50,6 +50,8 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
     @Override
     protected void onPause() {
         h.removeCallbacks(runnable); //stop handler when activity not visible
+        tapCounter = 0;
+        resultTapCounter = 0;
         super.onPause();
     }
 

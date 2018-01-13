@@ -6,24 +6,25 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.indoorway.android.common.sdk.IndoorwaySdk;
-import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 import com.wang.avi.AVLoadingIndicatorView;
+import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -37,16 +38,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private TextView txtSpeech;
     private ImageButton btnSpeech;
+    private ImageButton btnConfirm;
     private SpeechRecognizer sr;
     private TextToSpeech textToSpeech;
     private final int REQ_CODE_SPEECH_INPUT = 10;
     private AVLoadingIndicatorView loadingButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         txtSpeech = (TextView) findViewById(R.id.txtSpeechInput);
         btnSpeech = (ImageButton) findViewById(R.id.btnSpeak);
+        btnConfirm = (ImageButton) findViewById(R.id.btnConfirm);
         loadingButton = (AVLoadingIndicatorView) findViewById(R.id.speechLoader);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new MainActivity.listener());
@@ -97,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //TODO: podmianka buttona + handling yes/no to new activity
-        //TODO: mock buttonu
 
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -141,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Action", "UP" );
                 sr.stopListening();
                 showMicrophoneButton();
-                return true;
         }
         return false;
     }
+
 
     class listener implements RecognitionListener {
         public void onReadyForSpeech(Bundle params)
@@ -183,9 +186,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "result " + data.get(i));
                 str += data.get(i);
             }
-            //txtSpeech.setText("results: "+String.valueOf(data.size()));
+            if(String.valueOf(data.get(0)).equals("tak"))
+            {
+                Log.d("STTRES","Zmien aktiwiti");
+            }
             txtSpeech.setText(String.valueOf(data.get(0)));
-            readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + "?"));
+            readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + getResources().getString(R.string.pause)));
 
         }
         public void onPartialResults(Bundle partialResults)
