@@ -11,7 +11,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtSpeech;
     private ImageButton btnSpeech;
     private SpeechRecognizer sr;
+    private TextToSpeech textToSpeech;
     private final int REQ_CODE_SPEECH_INPUT = 10;
 
     @Override
@@ -75,6 +76,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return speechRecognize(view, motionEvent);
+            }
+        });
+
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.getDefault());
+                }
             }
         });
     }
@@ -156,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
             }
             //txtSpeech.setText("results: "+String.valueOf(data.size()));
             txtSpeech.setText(String.valueOf(data.get(0)));
+            readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + "?"));
+
         }
         public void onPartialResults(Bundle partialResults)
         {
@@ -165,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.d("TAG", "onEvent " + eventType);
         }
+    }
+
+    private void readString(String toSpeak) {
+        textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
 }
