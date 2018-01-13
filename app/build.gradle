@@ -39,4 +39,6 @@ dependencies {
 
 // optional if you don't want to use fragments
     compile('com.indoorway.android:fragments:2.0.4')
+//google nlp
+    compile 'com.google.cloud:google-cloud-language:1.14.0'
 }
