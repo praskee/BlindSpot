@@ -1,9 +1,9 @@
 package com.winthishackathon.xd.blindspot;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.RecognitionListener;
@@ -12,19 +12,18 @@ import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.indoorway.android.common.sdk.IndoorwaySdk;
-import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
 import com.winthishackathon.xd.blindspot.indoorwayMapPackage.IndoorwayMapActivity;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,28 +36,45 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_ENABLE_BT = 1;
     static final int MY_PERMISSIONS_REQUEST_MICROPHONE = 2;
-
+    private static final String TAG = "MainActivity";
     private TextView txtSpeech;
     private ImageButton btnSpeech;
     private SpeechRecognizer sr;
     private TextToSpeech textToSpeech;
     private final int REQ_CODE_SPEECH_INPUT = 10;
-
+    private AVLoadingIndicatorView loadingButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         txtSpeech = (TextView) findViewById(R.id.txtSpeechInput);
         btnSpeech = (ImageButton) findViewById(R.id.btnSpeak);
+        loadingButton = (AVLoadingIndicatorView) findViewById(R.id.speechLoader);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new MainActivity.listener());
-
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         //kiedy nie ma bluetootha
         if (mBluetoothAdapter == null) {
             // Device doesn't support Bluetooth
-            //TODO: dialog pop up ze apka nie dziala bez blufiuta
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+            builder1.setMessage("You need a bluetooth module to run this application");
+            builder1.setCancelable(true);
+
+
+            builder1.setNeutralButton(
+                    "Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
         }
+            //TODO: dialog pop up ze apka nie dziala bez blufiuta
+         else
         //jesli bluetooth jest wylaczony requestuj permissiony w runtimie
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -77,9 +93,13 @@ public class MainActivity extends AppCompatActivity {
         btnSpeech.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                showLoadingButton();
                 return speechRecognize(view, motionEvent);
             }
         });
+
+        //TODO: podmianka buttona + handling yes/no to new activity
+        //TODO: mock buttonu
 
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -90,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     // Requesting permission to RECORD_AUDIO
@@ -115,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d("Action", "DOWN" );
-
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
@@ -124,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 Log.d("Action", "UP" );
                 sr.stopListening();
+                showMicrophoneButton();
                 return true;
         }
         return false;
@@ -186,26 +205,36 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    private void languageProcessing(String input){
+    private void languageProcessing(String input) {
         List<String> result = Arrays.asList(input.split(" "));
-        for(int i = 0; i < result.size()-1; i++) {
-            if(result.get(i).equals(new String("sala")) || result.get(i).equals(new String("sali"))) {
+        for (int i = 0; i < result.size(); i++) {
+            // Looking for a lift
+            if(result.size() == 1 && result.get(i).equals(new String("winda")) || result.get(i).equals(new String("windy"))) {
+                Log.d("Lift:", result.get(i).toString());
+                break;
+            } else if (result.get(i).equals(new String("sala")) || result.get(i).equals(new String("sali"))) {
                 try {
                     Integer.parseInt(result.get(i + 1));
                     Log.d("Room:", result.get(i + 1).toString());
                     //TODO: Navigate to room NUMBER
-                    break;
+                        break;
                 } catch (NumberFormatException ex) {
-                    continue;
+                    Log.d("Exception:", ex.toString());
                     //TODO: String is not a number
+                } catch (IndexOutOfBoundsException iex){
+                    Log.d("Exception:", iex.toString());
                 }
             }
-            // Looking for a lift
-            if(result.get(i).equals(new String("winda")) || result.get(i).equals(new String("windy"))){
-                //TODO: Navigate to lift
-                Log.d("Lift:", result.get(i).toString());
-                break;
-            }
         }
+    }
+
+    private void showLoadingButton() {
+        loadingButton.setVisibility(View.VISIBLE);
+        btnSpeech.setVisibility(View.INVISIBLE);
+    }
+
+    private void showMicrophoneButton(){
+        loadingButton.setVisibility(View.INVISIBLE);
+        btnSpeech.setVisibility(View.VISIBLE);
     }
 }
