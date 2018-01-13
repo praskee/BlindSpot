@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">BlindSpot</string>
     <string name="exit_text">Czy na pewno chcesz opuścić nawigację?</string>
+    <string name="welcome_message">Tap on mic to speak</string>
+    <string name="mic_description">Microphone. Tap on microphone to speak</string>
+    <string name="tv_speak_description">Your text</string>
 </resources>
