@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">BlindSpot</string>
+    <string name="speech_prompt">speech_prompt</string>
+    <string name="speech_not_supported">speech_not_supported</string>
+    <string name="not_recognized">Spróbuj ponownie</string>
+    <string name="exit_text">Czy na pewno chcesz opuścić nawigację?</string>
+    <string name="welcome_message">Tap on mic to speak</string>
+    <string name="mic_description">Microphone. Tap on microphone to speak</string>
+    <string name="tv_speak_description">Your text</string>
+    <string name="question">Czy chodziło ci o</string>
+    <string name="pause">Odpowiedz tak lub nie</string>
 </resources>
