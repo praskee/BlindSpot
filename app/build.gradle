@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
+
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     // required for map and location modules
     compile('com.indoorway.android:common:2.0.4')
@@ -41,4 +42,9 @@ dependencies {
 
 // optional if you don't want to use fragments
     compile('com.indoorway.android:fragments:2.0.4')
+
+    compile 'com.github.florent37:viewanimator:1.0.5'
+//    compile 'com.steelkiwi:dots-loader-view:1.0.0'
+//    compile 'com.agrawalsuneet.androidlibs:dotsloader:0.8'
+    compile 'com.wang.avi:library:2.1.3'
 }
