@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BlindSpot</string>
+    <string name="speech_prompt">speech_prompt</string>
+    <string name="speech_not_supported">speech_not_supported</string>
+    <string name="not_recognized">Nie rozpoznano</string>
+
 </resources>

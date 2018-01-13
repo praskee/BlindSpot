@@ -14,7 +14,7 @@
         android:layout_marginTop="100dp"
         android:textColor="@color/white"
         android:textSize="32dp"
-        android:textStyle="normal" />
+        android:textStyle="normal"/>
 
     <LinearLayout
         android:id="@+id/ll_mic_prostokat"
@@ -33,19 +33,6 @@
             android:layout_marginTop="16dp"
             android:background="@null"
             android:src="@drawable/ic_mic_black_64dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="cursive"
-            android:text="KLIKNIJ ŻEBY MÓWIĆ"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="40dp"
-            android:textStyle="normal|bold"
-            android:typeface="normal" />
     </LinearLayout>
 
 </RelativeLayout>
