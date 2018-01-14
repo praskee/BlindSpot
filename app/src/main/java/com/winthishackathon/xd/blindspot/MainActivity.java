@@ -10,6 +10,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -38,12 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private TextView txtSpeech;
     private ImageButton btnSpeech;
-    private ImageButton btnConfirm;
     private SpeechRecognizer sr;
     private TextToSpeech textToSpeech;
     private final int REQ_CODE_SPEECH_INPUT = 10;
     private AVLoadingIndicatorView loadingButton;
-    private boolean yesFlag = false;
+    public static final String ROOM_FROM_VOICE_MSG = "ROOM_PASSED";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         txtSpeech = (TextView) findViewById(R.id.txtSpeechInput);
         btnSpeech = (ImageButton) findViewById(R.id.btnSpeak);
-        btnConfirm = (ImageButton) findViewById(R.id.btnConfirm);
         loadingButton = (AVLoadingIndicatorView) findViewById(R.id.speechLoader);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new MainActivity.listener());
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     class listener implements RecognitionListener {
+        private String processedInput = null;
         public void onReadyForSpeech(Bundle params)
         {
             Log.d("TAG", "onReadyForSpeech");
@@ -187,17 +187,23 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "result " + data.get(i));
                 str += data.get(i);
             }
-            if(String.valueOf(data.get(0)).equals("tak") && yesFlag)
+            //TODO: prolly "nie" case
+            if(String.valueOf(data.get(0)).equals("nie"))
+            {
+                readString(getResources().getString(R.string.noResponse));
+            }
+            if(String.valueOf(data.get(0)).equals("tak") && processedInput!=null)
             {
                 Log.d("STTRES","Zmien aktiwiti");
                 Intent intent = new Intent(MainActivity.this,IndoorwayMapActivity.class);
+                intent.putExtra(ROOM_FROM_VOICE_MSG, processedInput);
                 startActivity(intent);
                 readString("Przechodze do nawigacji");
             }
             else {
                 txtSpeech.setText(String.valueOf(data.get(0)));
                 readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + getResources().getString(R.string.pause)));
-                languageProcessing(String.valueOf(data.get(0)));
+                processedInput = processVoiceInput(String.valueOf(data.get(0)));
             }
 
         }
@@ -215,28 +221,28 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    private void languageProcessing(String input) {
+    private String processVoiceInput(String input) {
         List<String> result = Arrays.asList(input.split(" "));
         for (int i = 0; i < result.size(); i++) {
             // Looking for a lift
             if(result.size() == 1 && result.get(i).equals(new String("winda")) || result.get(i).equals(new String("windy"))) {
                 Log.d("Lift:", result.get(i).toString());
-                break;
+                return "winda";
             } else if (result.get(i).equals(new String("sala")) || result.get(i).equals(new String("sali"))) {
                 try {
                     Integer.parseInt(result.get(i + 1));
                     Log.d("Room:", result.get(i + 1).toString());
-                    //TODO: Navigate to room NUMBER
-                    yesFlag = true;
-                        break;
+                    return "sala " + result.get(i+1).toString();
                 } catch (NumberFormatException ex) {
                     Log.d("Exception:", ex.toString());
-                    //TODO: String is not a number
+                    return null;
                 } catch (IndexOutOfBoundsException iex){
                     Log.d("Exception:", iex.toString());
+                    return null;
                 }
             }
         }
+        return null;
     }
 
     private void showLoadingButton() {
