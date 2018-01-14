@@ -125,7 +125,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                             setResult(RESULT_CANCELED);
                             finish();
                         }
-                        Log.d("indoorway", "1");
                         List<IndoorwayNode> paths = indoorwayMap.getPaths();
                         for(IndoorwayNode n:paths) {
                             for(Long l:n.getNeighbours()) {
@@ -135,11 +134,9 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                             }
                         }
                         HashMap adjacencyMap = IndoorSDKUtils.getMapPaths(paths);
-                        Log.d("indoorway", "2");
 
                         Long destinationId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, coordinates);
                         HashMap<FromToContainer, Double> dist = Pathfinding.Dijkstra(adjacencyMap, destinationId);
-                        Log.d("indoorway", "3");
 
                         MarkersLayer myLayer = mapFragment.getMapView().getMarker().addLayer(10.0F);
                         while (true) {
@@ -160,16 +157,14 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
 //                                    Log.e("indoorway", "MOCK POPSUL");
 //                                }
 
-                            Log.d("indoorway", "4");
                             Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
                             List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
-                            Log.d("indoorway", "5");
 
-                            Log.d("indoorway", Integer.toString(path.size()));
+
                             for (int i = 0; i < path.size(); i++) {
                                 Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
                                 myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
-                                        Color.BLUE, Color.BLACK, 0.0f, coord));
+                                        Color.GREEN, Color.BLACK, 0.0f, coord));
                             }
                             if (path.size() < 2) {
                                 break;
@@ -182,8 +177,8 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                             }
                             for (int i = 0; i < path.size(); i++)
                                 myLayer.remove(Integer.toString(i));
+                            }
                         }
-                    }
 
                 }).start();
             }
