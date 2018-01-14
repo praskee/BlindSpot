@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "result " + data.get(i));
                 str += data.get(i);
             }
-            //TODO: prolly "nie" case
             if(String.valueOf(data.get(0)).equals("nie"))
             {
                 readString(getResources().getString(R.string.noResponse));
