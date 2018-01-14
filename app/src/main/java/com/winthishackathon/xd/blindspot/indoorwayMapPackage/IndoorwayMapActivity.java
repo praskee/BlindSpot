@@ -92,14 +92,12 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
         if(extras != null)
         {
             localizationName = extras.getString("ROOM_PASSED");
-            Log.i("ROOMPASSED",localizationName);
         }
         //TODO: ZMIENIC PIETRO
         mv.load("CScrSxCVhQg","3-_M01M3r5w");
         mv.getTouch().setOnClickListener(new Action1<Coordinates>() {
             @Override
             public void onAction(Coordinates coordinates) {
-                Log.i("DETEKTYW","TAP DETECTED");
                 tapCounter++;
                 if(tapCounter%3 == 0)
                 {
@@ -149,7 +147,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                         for(IndoorwayNode n:paths) {
                             for(Long l:n.getNeighbours()) {
                                 if(l == n.getId()) {
-                                    Log.d("indoorway","KURWAAAAAA "+n.toString());
                                 }
                             }
                         }

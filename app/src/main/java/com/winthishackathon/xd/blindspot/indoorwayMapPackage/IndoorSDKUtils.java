@@ -67,7 +67,6 @@ public class IndoorSDKUtils {
         List<IndoorwayObjectParameters> mapObjects = indoorwayMap.getObjects();
         Log.d("indoorway", Integer.toString(mapObjects.size()));
         while (mapObjects.size() == 0){
-            Log.d("indoorway", "zero obiektow!!!");
             mapObjects = indoorwayMap.getObjects();
             Thread.sleep(1000);
         }
