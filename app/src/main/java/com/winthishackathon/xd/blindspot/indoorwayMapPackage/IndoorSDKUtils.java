@@ -65,13 +65,11 @@ public class IndoorSDKUtils {
 
     static public Coordinates getPositionFromObjectName(String name, IndoorwayMap indoorwayMap) throws Exception{
         List<IndoorwayObjectParameters> mapObjects = indoorwayMap.getObjects();
-        Log.d("indoorway", Integer.toString(mapObjects.size()));
         while (mapObjects.size() == 0){
             mapObjects = indoorwayMap.getObjects();
             Thread.sleep(1000);
         }
         for (IndoorwayObjectParameters iop: mapObjects) {
-            Log.d("indoorway", iop.getName());
 
             String mapped = "";
             for (String splitted: iop.getName().toLowerCase().split(" ")) {

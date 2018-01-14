@@ -133,14 +133,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d("Action", "DOWN" );
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
                 sr.startListening(intent);
                 return true;
             case MotionEvent.ACTION_UP:
-                Log.d("Action", "UP" );
                 sr.stopListening();
                 showMicrophoneButton();
         }
@@ -183,12 +181,10 @@ public class MainActivity extends AppCompatActivity {
             ArrayList data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             for (int i = 0; i < data.size(); i++)
             {
-                Log.d("TAG", "result " + data.get(i));
                 str += data.get(i);
             }
             if(String.valueOf(data.get(0)).equals("tak") && processedInput!=null)
             {
-                Log.d("STTRES","Zmien aktiwiti");
                 Intent intent = new Intent(MainActivity.this,IndoorwayMapActivity.class);
                 intent.putExtra(ROOM_FROM_VOICE_MSG, processedInput);
                 startActivity(intent);
@@ -225,18 +221,14 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < result.size(); i++) {
             // Looking for a lift
             if(result.size() == 1 && result.get(i).equals(new String("winda")) || result.get(i).equals(new String("windy"))) {
-                Log.d("Lift:", result.get(i).toString());
                 return "winda";
             } else if (result.get(i).equals(new String("sala")) || result.get(i).equals(new String("sali"))) {
                 try {
                     Integer.parseInt(result.get(i + 1));
-                    Log.d("Room:", result.get(i + 1).toString());
                     return "sala " + result.get(i+1).toString();
                 } catch (NumberFormatException ex) {
-                    Log.d("Exception:", ex.toString());
                     return null;
                 } catch (IndexOutOfBoundsException iex){
-                    Log.d("Exception:", iex.toString());
                     return null;
                 }
             }

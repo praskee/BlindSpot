@@ -73,7 +73,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
             public void run() {
                 tapCounter = 0;
                 resultTapCounter = 0;
-                Log.i("Timer","Counters got cleared");
                 runnable=this;
 
                 h.postDelayed(runnable, delay);
@@ -93,8 +92,7 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
         {
             localizationName = extras.getString("ROOM_PASSED");
         }
-        //TODO: ZMIENIC PIETRO
-        mv.load("CScrSxCVhQg","3-_M01M3r5w");
+        mv.load("CScrSxCVhQg","gVI7XXuBFCQ");
         mv.getTouch().setOnClickListener(new Action1<Coordinates>() {
             @Override
             public void onAction(Coordinates coordinates) {
@@ -137,7 +135,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                         Coordinates coordinates = null;
                         try {
                             coordinates = IndoorSDKUtils.getPositionFromObjectName(localizationName, indoorwayMap);
-                            Log.d("indoorway",coordinates.toString() + localizationName);
                         } catch (Exception e) {
                             Log.e("indoorway", "Couldn't find specified object " + localizationName);
                             setResult(RESULT_CANCELED);
@@ -166,7 +163,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                                 out -= 90;
                                 if (out < 0) out += 360;
                                 setPikAngle(out);
-                                Log.d("indoorway", Float.toString(v));
                             }
                         };
 
@@ -185,9 +181,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
 
                             Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
                             List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
-
-
-
 
                             for (int i = 0; i < path.size(); i++) {
                                 Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
