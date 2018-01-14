@@ -100,16 +100,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: podmianka buttona + handling yes/no to new activity
-
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
                     textToSpeech.setLanguage(Locale.getDefault());
+                    readString(getResources().getString(R.string.welcomeMsg));
                 }
             }
         });
+
     }
 
 
@@ -187,10 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "result " + data.get(i));
                 str += data.get(i);
             }
-            if(String.valueOf(data.get(0)).equals("nie"))
-            {
-                readString(getResources().getString(R.string.noResponse));
-            }
             if(String.valueOf(data.get(0)).equals("tak") && processedInput!=null)
             {
                 Log.d("STTRES","Zmien aktiwiti");
@@ -199,7 +195,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 readString("Przechodze do nawigacji");
             }
-            else {
+            else if(String.valueOf(data.get(0)).equals("nie"))
+            {
+            readString(getResources().getString(R.string.noResponse));
+
+            }
+            else{
                 txtSpeech.setText(String.valueOf(data.get(0)));
                 readString(getResources().getString(R.string.question) + " " + String.valueOf(data.get(0) + getResources().getString(R.string.pause)));
                 processedInput = processVoiceInput(String.valueOf(data.get(0)));

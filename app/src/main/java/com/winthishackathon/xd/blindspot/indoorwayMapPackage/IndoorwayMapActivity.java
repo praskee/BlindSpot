@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,6 +44,7 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
     Handler h = new Handler();
     int delay = 1000; //1 seconds
     Runnable runnable;
+    FloatingActionButton floatingActionButton;
 
 
     @Override
@@ -80,12 +82,16 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
     @Override
     public void onMapFragmentReady(final MapFragment mapFragment) {
         final MapView mv = mapFragment.getMapView();
+
+        IndoorwayMapFragment.Config config = new IndoorwayMapFragment.Config();
+        config.setLocationButtonVisible(false);
         Bundle extras = getIntent().getExtras();
         if(extras != null)
         {
             localizationName = extras.getString("ROOM_PASSED");
             Log.i("ROOMPASSED",localizationName);
         }
+        //TODO: ZMIENIC PIETRO
         mv.load("CScrSxCVhQg","3-_M01M3r5w");
         mv.getTouch().setOnClickListener(new Action1<Coordinates>() {
             @Override
@@ -113,6 +119,10 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
         mv.setOnMapLoadCompletedListener(new Action1<IndoorwayMap>() {
                 @Override
                 public void onAction(final IndoorwayMap indoorwayMap) {
+
+                    floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+                    floatingActionButton.performClick();
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
