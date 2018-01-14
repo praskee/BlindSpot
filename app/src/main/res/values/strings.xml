@@ -11,4 +11,5 @@
     <string name="pause">Odpowiedz tak lub nie</string>
     <string name="noResponse">Powiedz poprawną lokację</string>
     <string name="welcomeMsg">Nacisnij na przycisk na dole ekranu aby podać numer sali do której chcesz się udać lub windę</string>
+    <string name="object_not_found">Nie znaleziono obiektu, spróbuj jeszcze raz</string>
 </resources>

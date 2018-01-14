@@ -2,6 +2,7 @@ package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import com.indoorway.android.fragments.sdk.map.MapFragment;
 import com.indoorway.android.map.sdk.view.MapView;
 import com.indoorway.android.map.sdk.view.drawable.figures.DrawableCircle;
 import com.indoorway.android.map.sdk.view.drawable.layers.MarkersLayer;
+import com.winthishackathon.xd.blindspot.MainActivity;
 import com.winthishackathon.xd.blindspot.R;
 
 
@@ -132,7 +134,7 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                         } catch (Exception e) {
                             Log.e("indoorway", "Couldn't find specified object " + localizationName);
                             setResult(RESULT_CANCELED);
-                            finish();
+                            IndoorwayMapActivity.this.finish();
                         }
                         List<IndoorwayNode> paths = indoorwayMap.getPaths();
                         for(IndoorwayNode n:paths) {
@@ -143,49 +145,53 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                             }
                         }
                         HashMap adjacencyMap = IndoorSDKUtils.getMapPaths(paths);
+                        try {
+                            Long destinationId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, coordinates);
+                            HashMap<FromToContainer, Double> dist = Pathfinding.Dijkstra(adjacencyMap, destinationId);
 
-                        Long destinationId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, coordinates);
-                        HashMap<FromToContainer, Double> dist = Pathfinding.Dijkstra(adjacencyMap, destinationId);
-
-                        MarkersLayer myLayer = mapFragment.getMapView().getMarker().addLayer(10.0F);
-                        while (true) {
-                            IndoorwayPosition currentPosition = mapFragment.getLastKnownPosition();
-                            if(currentPosition == null) {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                            MarkersLayer myLayer = mapFragment.getMapView().getMarker().addLayer(10.0F);
+                            while (true) {
+                                IndoorwayPosition currentPosition = mapFragment.getLastKnownPosition();
+                                if(currentPosition == null) {
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        finish();
+                                    }
+                                    continue;
                                 }
-                                continue;
-                            }
-                            Coordinates currentCoordinates = currentPosition.getCoordinates();
-                            //Coordinates currentCoordinates = null;
-//                                try {
-//                                    currentCoordinates = IndoorSDKUtils.getPositionFromObjectName("sala 216", indoorwayMap); // TODO: MOCK!!!!!
-//                                } catch (Exception e) {
-//                                    Log.e("indoorway", "MOCK POPSUL");
-//                                }
+                                Coordinates currentCoordinates = currentPosition.getCoordinates();
+                                //Coordinates currentCoordinates = null;
+    //                                try {
+    //                                    currentCoordinates = IndoorSDKUtils.getPositionFromObjectName("sala 216", indoorwayMap); // TODO: MOCK!!!!!
+    //                                } catch (Exception e) {
+    //                                    Log.e("indoorway", "MOCK POPSUL");
+    //                                }
 
-                            Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
-                            List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
+                                Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
+                                List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
 
 
-                            for (int i = 0; i < path.size(); i++) {
-                                Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
-                                myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
-                                        Color.GREEN, Color.BLACK, 0.0f, coord));
-                            }
-                            if (path.size() < 2) {
-                                break;
-                            }
-                            try {
-                                Thread.sleep(2000);
-                            } catch (Exception e) {
-                                Log.e("indoorway", "Error while sleeping " + e.toString());
-                                break;
-                            }
-                            for (int i = 0; i < path.size(); i++)
-                                myLayer.remove(Integer.toString(i));
+                                for (int i = 0; i < path.size(); i++) {
+                                    Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
+                                    myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
+                                            Color.GREEN, Color.BLACK, 0.0f, coord));
+                                }
+                                if (path.size() < 2) {
+                                    break;
+                                }
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (Exception e) {
+                                    Log.e("indoorway", "Error while sleeping " + e.toString());
+                                    break;
+                                }
+                                for (int i = 0; i < path.size(); i++)
+                                    myLayer.remove(Integer.toString(i));
+                                }
+                            } catch (Exception e){
+                                Log.e("indoorway", "Couldn't find specified object");
                             }
                         }
 

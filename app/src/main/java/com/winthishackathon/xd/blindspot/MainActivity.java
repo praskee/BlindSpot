@@ -126,11 +126,20 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if (!permissionToRecordAccepted ) finish();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CANCELED) {
+            Log.d("LOG", resultCode + " Result Canceled");
+            readString(getResources().getString(R.string.object_not_found));
+            txtSpeech.setText(getResources().getString(R.string.welcome_message));
+
+        }
     }
 
     public boolean speechRecognize(View v, MotionEvent event) {
-        SpeechRecognizer speechRecognizer = createSpeechRecognizer(MainActivity.this);
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -192,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("STTRES","Zmien aktiwiti");
                 Intent intent = new Intent(MainActivity.this,IndoorwayMapActivity.class);
                 intent.putExtra(ROOM_FROM_VOICE_MSG, processedInput);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 readString("Przechodze do nawigacji");
             }
             else if(String.valueOf(data.get(0)).equals("nie"))
