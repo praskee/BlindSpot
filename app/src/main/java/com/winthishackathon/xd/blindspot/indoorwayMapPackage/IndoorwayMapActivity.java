@@ -159,7 +159,7 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                                 for (int i = 0; i < path.size(); i++) {
                                     Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
                                     myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
-                                            Color.BLUE, Color.BLACK, 0.0f, coord));
+                                            Color.GREEN, Color.BLACK, 0.0f, coord));
                                 }
                                 if (path.size() < 2) {
                                     break;
