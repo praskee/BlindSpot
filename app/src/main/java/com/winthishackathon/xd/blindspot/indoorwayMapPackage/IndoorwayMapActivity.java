@@ -1,8 +1,11 @@
 package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -21,6 +24,7 @@ import com.indoorway.android.common.sdk.model.IndoorwayNode;
 import com.indoorway.android.common.sdk.model.IndoorwayPosition;
 import com.indoorway.android.fragments.sdk.map.IndoorwayMapFragment;
 import com.indoorway.android.fragments.sdk.map.MapFragment;
+import com.indoorway.android.location.sdk.IndoorwayLocationSdk;
 import com.indoorway.android.map.sdk.view.MapView;
 import com.indoorway.android.map.sdk.view.drawable.figures.DrawableCircle;
 import com.indoorway.android.map.sdk.view.drawable.layers.MarkersLayer;
@@ -36,7 +40,7 @@ import java.util.List;
 
 public class IndoorwayMapActivity extends AppCompatActivity implements IndoorwayMapFragment.OnMapFragmentReadyListener {
     private String localizationName = null;
-
+    private double pikAngle = 0;
 
     int tapCounter = 0;
     int resultTapCounter = 0;
@@ -109,10 +113,18 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                 }
             }
         });
-
         mv.setOnMapLoadCompletedListener(new Action1<IndoorwayMap>() {
+            boolean flaga = false;
+            String firstMapUUID = "";
             @Override
             public void onAction(final IndoorwayMap indoorwayMap) {
+                if(flaga){
+                    if(!firstMapUUID.equals(indoorwayMap.getMapUuid())) return;
+                }
+                else{
+                    firstMapUUID = indoorwayMap.getMapUuid();
+                    flaga = true;
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -125,7 +137,7 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                             setResult(RESULT_CANCELED);
                             finish();
                         }
-                        List<IndoorwayNode> paths = indoorwayMap.getPaths();
+                        final List<IndoorwayNode> paths = indoorwayMap.getPaths();
                         for(IndoorwayNode n:paths) {
                             for(Long l:n.getNeighbours()) {
                                 if(l == n.getId()) {
@@ -139,6 +151,21 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                         HashMap<FromToContainer, Double> dist = Pathfinding.Dijkstra(adjacencyMap, destinationId);
 
                         MarkersLayer myLayer = mapFragment.getMapView().getMarker().addLayer(10.0F);
+
+                        Action1<Float> listener = new Action1<Float>() {
+                            @Override
+                            public void onAction(Float v) {
+                                double angles = paths.get(0).getCoordinates().getAngleTo(paths.get(1).getCoordinates());
+                                double out = angles - v;
+                                if (out < 0) out += 360;
+                                out -= 90;
+                                if (out < 0) out += 360;
+                                setPikAngle(out);
+                                Log.d("indoorway", Float.toString(v));
+                            }
+                        };
+
+                        IndoorwayLocationSdk.instance().direction().onHeadingChange().register(listener);
                         while (true) {
                             IndoorwayPosition currentPosition = mapFragment.getLastKnownPosition();
                             if(currentPosition == null) {
@@ -150,15 +177,11 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                                 continue;
                             }
                             Coordinates currentCoordinates = currentPosition.getCoordinates();
-                            //Coordinates currentCoordinates = null;
-//                                try {
-//                                    currentCoordinates = IndoorSDKUtils.getPositionFromObjectName("sala 216", indoorwayMap); // TODO: MOCK!!!!!
-//                                } catch (Exception e) {
-//                                    Log.e("indoorway", "MOCK POPSUL");
-//                                }
 
                             Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
                             List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
+
+
 
 
                             for (int i = 0; i < path.size(); i++) {
@@ -166,6 +189,24 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                                 myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
                                         Color.GREEN, Color.BLACK, 0.0f, coord));
                             }
+                            float multiplier = 1.0f;
+                            double myPikAngle = pikAngle;
+                            if(pikAngle > 180) {
+                                multiplier = 0.8f;
+                                if(pikAngle > 270) {
+                                    myPikAngle = 360 - pikAngle;
+                                } else {
+                                    myPikAngle = 90 - (pikAngle-90);
+                                }
+                            }
+                            float leftVolume = 1 - (float)(myPikAngle/180);
+                            float rightVolume = (float)myPikAngle / 180;
+                            //playSound(currentCoordinates, path);
+                            MediaPlayer mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pikpik);
+                            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            mPlayer.setLooping(false);
+                            mPlayer.setVolume(leftVolume * multiplier,rightVolume * multiplier);
+                            mPlayer.start();
                             if (path.size() < 2) {
                                 break;
                             }
@@ -184,6 +225,9 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
             }
         });
 
+    }
+    private void setPikAngle(double out){
+        pikAngle = out;
     }
 
 }
