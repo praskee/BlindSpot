@@ -8,6 +8,7 @@
     <string name="mic_description">Microphone. Tap on microphone to speak</string>
     <string name="tv_speak_description">Your text</string>
     <string name="question">Czy chodziło ci o</string>
-    <string name="pause">Odpowiedz tak lub nie, tak o from de szu</string>
+    <string name="pause">Odpowiedz tak lub nie</string>
     <string name="noResponse">Powiedz poprawną lokację</string>
+    <string name="welcomeMsg">Nacisnij na przycisk na dole ekranu aby podać numer sali do której chcesz się udać lub windę</string>
 </resources>
