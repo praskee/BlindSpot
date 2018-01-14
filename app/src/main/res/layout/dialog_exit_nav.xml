@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:weightSum="100"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="50"
         android:orientation="vertical"
-        android:background="@color/colorPrimary"
+        android:background="#55232529"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteY="0dp"
+        android:gravity="bottom">
 
         <TextView
             android:id="@+id/textView"
@@ -28,6 +33,7 @@
             tools:layout_editor_absoluteY="29dp" />
 
         <LinearLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -37,22 +43,27 @@
             android:layout_marginBottom="80dp"
             android:weightSum="100">
 
-            <!--<ImageButton-->
-                <!--android:id="@+id/imageButton"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="50"-->
-                <!--android:background="@color/colorPrimary"-->
-                <!--app:srcCompat="@drawable/ic_confirm" />-->
+            <ImageButton
+                android:id="@+id/confirmExitButton1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:background="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_check_black_54dp"
+                android:contentDescription="OK BUTTON"
+                tools:ignore="VectorDrawableCompat" />
 
-            <!--<ImageButton-->
-                <!--android:id="@+id/imageButton2"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="50"-->
-                <!--android:background="@color/colorPrimary"-->
-                <!--app:srcCompat="@drawable/ic_reject" />-->
+            <ImageButton
+                android:id="@+id/declineExitButton2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:background="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_close_black_54dp"
+                android:contentDescription="NO BUTTON"
+                tools:ignore="VectorDrawableCompat"
+                />
 
         </LinearLayout>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
