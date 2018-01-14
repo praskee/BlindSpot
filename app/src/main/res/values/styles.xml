@@ -7,5 +7,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <color name="indoorway_map_position_dot_background">#6ccb6a</color>
+    <color name="indoorway_map_position_dot_outline">#000000</color>
+    <color name="indoorway_map_position_uncertainty_background">#556ccb6a</color>
+    <color name="indoorway_map_position_uncertainty_outline">#6ccb6a</color>
+    <color name="indoorway_map_heading">#6ccb6a</color>
 </resources>
