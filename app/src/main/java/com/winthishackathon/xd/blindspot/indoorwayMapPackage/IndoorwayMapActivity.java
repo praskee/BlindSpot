@@ -111,70 +111,83 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
         });
 
         mv.setOnMapLoadCompletedListener(new Action1<IndoorwayMap>() {
-                @Override
-                public void onAction(final IndoorwayMap indoorwayMap) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Coordinates coordinates = null;
-                            try {
-                                coordinates = IndoorSDKUtils.getPositionFromObjectName(localizationName, indoorwayMap);
-                                Log.d("indoorway",coordinates.toString() + localizationName);
-                            } catch (Exception e) {
-                                Log.e("indoorway", "Couldn't find specified object " + localizationName);
-                                setResult(RESULT_CANCELED);
-                                finish();
-                            }
-                            List<IndoorwayNode> paths = indoorwayMap.getPaths();
-                            HashMap adjacencyMap = IndoorSDKUtils.getMapPaths(paths);
-
-                            Long destinationId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, coordinates);
-                            HashMap<FromToContainer, Double> dist = Pathfinding.Dijkstra(adjacencyMap, destinationId);
-
-                            MarkersLayer myLayer = mapFragment.getMapView().getMarker().addLayer(10.0F);
-                            while (true) {
-                                IndoorwayPosition currentPosition = mapFragment.getLastKnownPosition();
-                                if(currentPosition == null) {
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    continue;
+            @Override
+            public void onAction(final IndoorwayMap indoorwayMap) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Coordinates coordinates = null;
+                        try {
+                            coordinates = IndoorSDKUtils.getPositionFromObjectName(localizationName, indoorwayMap);
+                            Log.d("indoorway",coordinates.toString() + localizationName);
+                        } catch (Exception e) {
+                            Log.e("indoorway", "Couldn't find specified object " + localizationName);
+                            setResult(RESULT_CANCELED);
+                            finish();
+                        }
+                        Log.d("indoorway", "1");
+                        List<IndoorwayNode> paths = indoorwayMap.getPaths();
+                        for(IndoorwayNode n:paths) {
+                            for(Long l:n.getNeighbours()) {
+                                if(l == n.getId()) {
+                                    Log.d("indoorway","KURWAAAAAA "+n.toString());
                                 }
-                                Coordinates currentCoordinates = currentPosition.getCoordinates();
-                                //Coordinates currentCoordinates = null;
+                            }
+                        }
+                        HashMap adjacencyMap = IndoorSDKUtils.getMapPaths(paths);
+                        Log.d("indoorway", "2");
+
+                        Long destinationId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, coordinates);
+                        HashMap<FromToContainer, Double> dist = Pathfinding.Dijkstra(adjacencyMap, destinationId);
+                        Log.d("indoorway", "3");
+
+                        MarkersLayer myLayer = mapFragment.getMapView().getMarker().addLayer(10.0F);
+                        while (true) {
+                            IndoorwayPosition currentPosition = mapFragment.getLastKnownPosition();
+                            if(currentPosition == null) {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                continue;
+                            }
+                            Coordinates currentCoordinates = currentPosition.getCoordinates();
+                            //Coordinates currentCoordinates = null;
 //                                try {
 //                                    currentCoordinates = IndoorSDKUtils.getPositionFromObjectName("sala 216", indoorwayMap); // TODO: MOCK!!!!!
 //                                } catch (Exception e) {
 //                                    Log.e("indoorway", "MOCK POPSUL");
 //                                }
-                                Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
-                                List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
 
+                            Log.d("indoorway", "4");
+                            Long currentId = IndoorSDKUtils.getNearestToCoordinates(adjacencyMap, currentCoordinates);
+                            List<MapNode> path = Pathfinding.getPathFromTo(adjacencyMap, dist, destinationId, currentId);
+                            Log.d("indoorway", "5");
 
-                                for (int i = 0; i < path.size(); i++) {
-                                    Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
-                                    myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
-                                            Color.BLUE, Color.BLACK, 0.0f, coord));
-                                }
-                                if (path.size() < 2) {
-                                    break;
-                                }
-                                try {
-                                    Thread.sleep(2000);
-                                } catch (Exception e) {
-                                    Log.e("indoorway", "Error while sleeping " + e.toString());
-                                    break;
-                                }
-                                for (int i = 0; i < path.size(); i++)
-                                    myLayer.remove(Integer.toString(i));
+                            Log.d("indoorway", Integer.toString(path.size()));
+                            for (int i = 0; i < path.size(); i++) {
+                                Coordinates coord = new Coordinates(path.get(i).Lat, path.get(i).Lon);
+                                myLayer.add(new DrawableCircle(Integer.toString(i), 0.4f,
+                                        Color.BLUE, Color.BLACK, 0.0f, coord));
                             }
+                            if (path.size() < 2) {
+                                break;
+                            }
+                            try {
+                                Thread.sleep(2000);
+                            } catch (Exception e) {
+                                Log.e("indoorway", "Error while sleeping " + e.toString());
+                                break;
+                            }
+                            for (int i = 0; i < path.size(); i++)
+                                myLayer.remove(Integer.toString(i));
                         }
+                    }
 
-                    }).start();
-                }
-            });
+                }).start();
+            }
+        });
 
     }
 
