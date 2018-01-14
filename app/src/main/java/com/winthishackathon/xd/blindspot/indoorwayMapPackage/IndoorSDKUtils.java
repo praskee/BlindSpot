@@ -7,6 +7,8 @@ import com.indoorway.android.common.sdk.model.IndoorwayMap;
 import com.indoorway.android.common.sdk.model.IndoorwayNode;
 import com.indoorway.android.common.sdk.model.IndoorwayObjectParameters;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,10 +47,15 @@ public class IndoorSDKUtils {
     static public HashMap<Long,MapNode> getMapPaths(List<IndoorwayNode> paths) {
         final HashMap<Long, MapNode> neighbourMap = new HashMap<>();
         for (final IndoorwayNode node: paths) {
+            Collection<Long> nodeCol = node.getNeighbours();
+            final ArrayList<Long> list = new ArrayList<>();
+            for(Long l:nodeCol) {
+                if(!l.equals(node.getId())) list.add(l);
+            }
             neighbourMap.put(node.getId(), new MapNode(){{
                 Lat = node.getCoordinates().getLatitude();
                 Lon = node.getCoordinates().getLongitude();
-                Neighbours = node.getNeighbours();
+                Neighbours = list;
             }});
         }
         return neighbourMap;
@@ -58,7 +65,9 @@ public class IndoorSDKUtils {
         List<IndoorwayObjectParameters> mapObjects = indoorwayMap.getObjects();
         Log.d("indoorway", Integer.toString(mapObjects.size()));
         while (mapObjects.size() == 0){
+            Log.d("indoorway", "zero obiektow!!!");
             mapObjects = indoorwayMap.getObjects();
+            Thread.sleep(1000);
         }
         for (IndoorwayObjectParameters iop: mapObjects) {
 

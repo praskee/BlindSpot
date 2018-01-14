@@ -1,5 +1,7 @@
 package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,13 +59,15 @@ public class Pathfinding {
     public static List<MapNode> getPathFromTo(HashMap<Long,MapNode> adjacencyMap, HashMap<FromToContainer,Double> shortestDists, Long from, Long to){
         List<MapNode> res = new ArrayList<>();
         Long currentPos = to;
+
         while(shortestDists.get(new FromToContainer(from,currentPos)) != 0.0) {
             MapNode currentNode = adjacencyMap.get(currentPos);
             res.add(currentNode);
             for(Long neighbourID: currentNode.Neighbours) {
                 MapNode neighbour = adjacencyMap.get(neighbourID);
-                if(neighbour.distanceFrom(currentNode) + shortestDists.get(new FromToContainer(from,neighbourID))
-                        == shortestDists.get(new FromToContainer(from,currentPos))) {
+                double dist = Math.abs(neighbour.distanceFrom(currentNode) + shortestDists.get(new FromToContainer(from,neighbourID))
+                        - shortestDists.get(new FromToContainer(from,currentPos)));
+                if(dist < 0.001) {
                     currentPos = neighbourID;
                     break;
                 }
@@ -71,4 +75,5 @@ public class Pathfinding {
         }
         return res;
     }
+
 }
