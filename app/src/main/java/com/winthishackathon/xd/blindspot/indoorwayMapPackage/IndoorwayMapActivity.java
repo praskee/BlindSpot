@@ -3,7 +3,10 @@ package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -17,6 +20,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.indoorway.android.common.sdk.listeners.generic.Action1;
 import com.indoorway.android.common.sdk.model.Coordinates;
@@ -29,9 +34,11 @@ import com.indoorway.android.location.sdk.IndoorwayLocationSdk;
 import com.indoorway.android.map.sdk.view.MapView;
 import com.indoorway.android.map.sdk.view.drawable.figures.DrawableCircle;
 import com.indoorway.android.map.sdk.view.drawable.layers.MarkersLayer;
+import com.winthishackathon.xd.blindspot.MainActivity;
 import com.winthishackathon.xd.blindspot.R;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,9 +46,12 @@ import java.util.List;
  */
 
 public class IndoorwayMapActivity extends AppCompatActivity implements IndoorwayMapFragment.OnMapFragmentReadyListener {
+    private static final String TAG = "IndoorwayMapActivity";
     private String localizationName = null;
+    ImageButton imageButtonOK;
+    ImageButton imageButtonNO;
+    LinearLayout exitDialog;
     private double pikAngle = 0;
-
     int tapCounter = 0;
     int resultTapCounter = 0;
     Handler h = new Handler();
@@ -49,12 +59,33 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
     Runnable runnable;
     FloatingActionButton floatingActionButton;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indoorway_map);
+
         // get extras (where to go)
+        imageButtonOK = (ImageButton) findViewById(R.id.confirmExitButton);
+        imageButtonNO = (ImageButton) findViewById(R.id.declineExitButton);
+        exitDialog = (LinearLayout) findViewById(R.id.exit_dialog);
+        try {
+            imageButtonOK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(IndoorwayMapActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            imageButtonNO.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    exitDialog.setVisibility(View.INVISIBLE);
+                }
+            });
+        } catch(Exception err) {
+            Log.e(TAG, "onCreate: ", err);
+        }
     }
 
     @Override
@@ -85,7 +116,6 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
     @Override
     public void onMapFragmentReady(final MapFragment mapFragment) {
         final MapView mv = mapFragment.getMapView();
-
         IndoorwayMapFragment.Config config = new IndoorwayMapFragment.Config();
         config.setLocationButtonVisible(false);
         Bundle extras = getIntent().getExtras();
@@ -104,15 +134,8 @@ public class IndoorwayMapActivity extends AppCompatActivity implements Indoorway
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     // Vibrate for 500 milliseconds
                     v.vibrate(300);
-                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(IndoorwayMapActivity.this);
-                    View mView = getLayoutInflater().inflate(R.layout.dialog_exit_nav,null);
-                    mBuilder.setView(mView);
-                    final AlertDialog dialog = mBuilder.create();
-
-                    Window window = dialog.getWindow();
-                    WindowManager.LayoutParams wlp = window.getAttributes();
-                    wlp.gravity = Gravity.BOTTOM;
-                    dialog.show();
+                    Log.d("dialog     ", "onAction: " + exitDialog.toString());
+                    exitDialog.setVisibility(View.VISIBLE);
                 }
             }
         });
