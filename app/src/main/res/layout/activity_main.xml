@@ -16,6 +16,7 @@
         android:layout_marginTop="100dp"
         android:layout_weight="40"
         android:contentDescription="@string/tv_speak_description"
+        android:fontFamily="@font/montserrat"
         android:text="@string/welcome_message"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"

@@ -2,6 +2,8 @@ package com.winthishackathon.xd.blindspot.indoorwayMapPackage;
 
 import android.util.Log;
 
+import com.indoorway.android.common.sdk.IndoorwaySdk;
+import com.indoorway.android.common.sdk.listeners.generic.Action1;
 import com.indoorway.android.common.sdk.model.Coordinates;
 import com.indoorway.android.common.sdk.model.IndoorwayMap;
 import com.indoorway.android.common.sdk.model.IndoorwayNode;
@@ -65,11 +67,11 @@ public class IndoorSDKUtils {
         List<IndoorwayObjectParameters> mapObjects = indoorwayMap.getObjects();
         Log.d("indoorway", Integer.toString(mapObjects.size()));
         while (mapObjects.size() == 0){
-            Log.d("indoorway", "zero obiektow!!!");
             mapObjects = indoorwayMap.getObjects();
             Thread.sleep(1000);
         }
         for (IndoorwayObjectParameters iop: mapObjects) {
+            Log.d("indoorway", iop.getName());
 
             String mapped = "";
             for (String splitted: iop.getName().toLowerCase().split(" ")) {

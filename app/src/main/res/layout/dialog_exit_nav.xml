@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/montserrat"
             android:text="@string/exit_text"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"

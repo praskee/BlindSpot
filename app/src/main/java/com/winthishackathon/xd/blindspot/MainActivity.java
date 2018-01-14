@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alert11 = builder1.create();
             alert11.show();
         }
-            //TODO: dialog pop up ze apka nie dziala bez blufiuta
          else
         //jesli bluetooth jest wylaczony requestuj permissiony w runtimie
         if (!mBluetoothAdapter.isEnabled()) {
